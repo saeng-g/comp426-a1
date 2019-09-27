@@ -1,4 +1,5 @@
 #include "ball.h"
+#include <pthread.h>
 
 int main() {
     time_t t;
