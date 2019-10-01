@@ -23,7 +23,7 @@ void set_gravity(float);
 
 void move_ball(ball*);
 void change_velocity(ball*);
-void change_direction(ball*);
+void change_direction(ball*, char);
 char touch(ball*, ball*);
 char touch_wall(ball*, float, float, float, float);
 

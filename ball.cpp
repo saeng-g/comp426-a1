@@ -4,31 +4,51 @@
 
 using std::thread;
 
+
+/*
+ DECLARE GLOBAL VARS
+ */
+int nb_balls = 5; //rand()%7 + 3;
+ball* balls[5];
+int quadrant[] = {-3, -2, -1, 0, 1, 2, 3};
+
+// ball obj constructor;
 ball::ball() {
-        x = (float)(rand()%1000+1-500)/1000.0f;
-        y = (float)(rand()%1000+1-500)/1000.0f;
-        
-        int i = rand()%3 + 1;
-        if (i == 1) {
-            r = 0.0f;
-            g = 0.0f;
-            b = 1.0f;
-        }
-        else if (i == 2) {
-            r = 0.0f;
-            g = 1.0f;
-            b = 0.0f;
-        }
-        else {
-            r = 1.0f;
-            g = 0.0f;
-            b = 0.0f;
-        }
-        
-        vx = (float)(rand()%40+1-20)/1000.0f;
-        vy = (float)(rand()%40+1-20)/1000.0f;
-        
-        w = (float)i*50.0f/1000.0f;
+    //select quadrant
+    int q = 8;
+    while (q == 8) {
+        int k = rand()%6;
+        q = quadrant[k];
+        quadrant[k] = 8;
+    }
+    
+    printf("q%d\n", q);
+    
+    x = ((float)(200.0f)*(float)q)/1000.0f;
+    y = (float)(rand()%1400+1-700)/1000.0f;
+    
+    printf("xy %f, %f\n", x, y);
+    int i = rand()%3 + 1;
+    if (i == 1) {
+        r = 0.0f;
+        g = 0.0f;
+        b = 1.0f;
+    }
+    else if (i == 2) {
+        r = 0.0f;
+        g = 1.0f;
+        b = 0.0f;
+    }
+    else {
+        r = 1.0f;
+        g = 0.0f;
+        b = 0.0f;
+    }
+    
+    vx = (float)(rand()%20+1-10)/1000.0f;
+    vy = (float)(rand()%20+1-10)/1000.0f;
+    
+    w = (float)i*50.0f/1000.0f;
 };
 
 // set friction and gravity to user defined values
@@ -61,9 +81,18 @@ void change_velocity(ball* b) {
     b->vy = (b->vy <= 0.001f) && (b->y - b->w <= -0.999f) ? 0 : b->vy - GRAVITY_CONSTANT_Y;
 }
 
-void change_direction(ball* b) {
-    b->vx = 0 - b->vx;
-    b->vy = 0 - b->vy;
+// change direction
+void change_direction(ball* b, char direction) {
+    if (direction == 'l' || direction == 'r') {
+        b->vx = 0 - b->vx;
+    }
+    else if (direction == 't' || direction == 'b') {
+        b->vy = 0 - b->vy;
+    }
+    else {
+        b->vx = 0 - b->vx;
+        b->vy = 0 - b->vy;
+    }
 }
 
 // returns 1 if balls are touching else 0
@@ -85,14 +114,7 @@ char touch_wall(ball* b1, float minx, float maxx, float miny, float maxy) {
     else { return '0'; } //not touching any walls
 }
 
-/*
- DECLARE GLOBAL VARS
- */
-
-int nb_balls = 5; //rand()%7 + 3;
-ball* balls[5];
-int quadrant[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
-
+//
 void draw_ball(ball* b) {
     float x = b->x;
     float y = b->y;
@@ -111,7 +133,7 @@ void draw_ball(ball* b) {
 
 void timer(int value) {
     glutPostRedisplay();
-    glutTimerFunc(30, timer, 0);
+    glutTimerFunc(10, timer, 0);
 }
 
 void change_step(ball* b) {
@@ -120,12 +142,12 @@ void change_step(ball* b) {
         if (b!=balls[j]) {
             char touched = touch(b, balls[j]);
             if (touched == 'n') {
-                change_direction(b);
+                change_direction(b, touched);
             }
         }
     }
     if (a!='0') {
-        change_direction(b);
+        change_direction(b, a);
     }
     change_velocity(b);
 }
@@ -138,7 +160,7 @@ void display()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     for (int i=0; i<nb_balls; i++) {
-        printf("%f,%f,%f\n", balls[i]->x, balls[i]->y, balls[i]->w);
+        //printf("%f,%f,%f\n", balls[i]->x, balls[i]->y, balls[i]->w);
         draw_ball(balls[i]);
         //thread_ids[i] = thread(draw_ball, balls[i]);
     }
