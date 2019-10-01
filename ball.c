@@ -68,10 +68,12 @@ void change_direction(ball* b) {
 
 // returns 1 if balls are touching else 0
 char touch(ball* b1, ball* b2) {
+    char result;
     double x_diff = pow((double) b1->x - (double) b2->x, 2);
     double y_diff = pow((double) b1->y - (double) b2->y, 2);
     double dist = sqrt(x_diff + y_diff);
-    return (dist - (b1->w + b2->w)) < -0.0006f ? 't' : 'f';
+    result = (dist - (b1->w + b2->w)) < -0.0006f ? 't' : 'f';
+    return result;
 }
 
 // returns 1 if ball touches wall else 0
@@ -89,6 +91,7 @@ char touch_wall(ball* b1, float minx, float maxx, float miny, float maxy) {
 
 int nb_balls = 5; //rand()%7 + 3;
 ball* balls[5];
+int quadrant[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
 
 void draw_ball(ball* b) {
     float x = b->x;
