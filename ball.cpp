@@ -72,7 +72,7 @@ char touch(ball* b1, ball* b2) {
     double x_diff = pow((double) b1->x - (double) b2->x, 2);
     double y_diff = pow((double) b1->y - (double) b2->y, 2);
     double dist = sqrt(x_diff + y_diff);
-    result = (dist - (b1->w + b2->w)) < -0.0006f ? 't' : 'f';
+    result = (dist - (b1->w + b2->w)) < -0.0006f ? 'y' : 'n';
     return result;
 }
 
@@ -119,7 +119,7 @@ void change_step(ball* b) {
     for (int j=0; j<nb_balls; j++) {
         if (b!=balls[j]) {
             char touched = touch(b, balls[j]);
-            if (touched == 't') {
+            if (touched == 'n') {
                 change_direction(b);
             }
         }

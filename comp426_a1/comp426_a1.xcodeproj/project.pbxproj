@@ -12,7 +12,7 @@
 		099995AE233ED304001E5182 /* libglfw.3.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 099995AD233ED304001E5182 /* libglfw.3.3.dylib */; };
 		099995B4233ED5C9001E5182 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 099995B3233ED5C9001E5182 /* OpenGL.framework */; };
 		099995B8233FAD56001E5182 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 099995B7233FAD56001E5182 /* GLKit.framework */; };
-		099995BA233FADC8001E5182 /* ball.c in Sources */ = {isa = PBXBuildFile; fileRef = 0999959B233EC910001E5182 /* ball.c */; };
+		099995BA233FADC8001E5182 /* ball.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0999959B233EC910001E5182 /* ball.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -29,8 +29,8 @@
 
 /* Begin PBXFileReference section */
 		09999591233EC8F3001E5182 /* comp426_a1 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = comp426_a1; sourceTree = BUILT_PRODUCTS_DIR; };
-		0999959B233EC910001E5182 /* ball.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = ball.c; path = ../../ball.c; sourceTree = "<group>"; };
-		0999959C233EC910001E5182 /* ball.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ball.h; path = ../../ball.h; sourceTree = "<group>"; };
+		0999959B233EC910001E5182 /* ball.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = ball.cpp; path = ../../ball.cpp; sourceTree = "<group>"; };
+		0999959C233EC910001E5182 /* ball.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; fileEncoding = 4; name = ball.hpp; path = ../../ball.hpp; sourceTree = "<group>"; };
 		0999959D233EC911001E5182 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = main.c; path = ../../main.c; sourceTree = "<group>"; };
 		099995A1233ECB4C001E5182 /* triangle.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = triangle.cpp; path = "../../../../../../Downloads/Tutorial 2 2/Tutorial_2_OpenGL_Examples/triangle.cpp"; sourceTree = "<group>"; };
 		099995A2233ECB4C001E5182 /* firstWindow.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = firstWindow.cpp; path = "../../../../../../Downloads/Tutorial 2 2/Tutorial_2_OpenGL_Examples/firstWindow.cpp"; sourceTree = "<group>"; };
@@ -79,10 +79,10 @@
 		09999593233EC8F3001E5182 /* comp426_a1 */ = {
 			isa = PBXGroup;
 			children = (
-				0999959B233EC910001E5182 /* ball.c */,
+				0999959B233EC910001E5182 /* ball.cpp */,
 				099995A2233ECB4C001E5182 /* firstWindow.cpp */,
 				099995A1233ECB4C001E5182 /* triangle.cpp */,
-				0999959C233EC910001E5182 /* ball.h */,
+				0999959C233EC910001E5182 /* ball.hpp */,
 				0999959D233EC911001E5182 /* main.c */,
 			);
 			path = comp426_a1;
@@ -161,7 +161,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				099995BA233FADC8001E5182 /* ball.c in Sources */,
+				099995BA233FADC8001E5182 /* ball.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
