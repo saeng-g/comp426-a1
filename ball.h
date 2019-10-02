@@ -10,7 +10,7 @@
 #include <GL/freeglut.h>
 
 float FRICTION_CONSTANT_X = 0.0f; //default friction
-float GRAVITY_CONSTANT_Y = 0.00001f; //default gravity
+float GRAVITY_CONSTANT_Y = 0.001f; //default gravity
 
 class ball {
 public:

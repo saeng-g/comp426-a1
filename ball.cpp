@@ -4,30 +4,33 @@
 
 using std::thread;
 
-
 /*
  DECLARE GLOBAL VARS
  */
 int nb_balls = 5; //rand()%7 + 3;
 ball* balls[5];
-int quadrant[] = {-3, -2, -1, 0, 1, 2, 3};
+int quadrant_x[] = {-3, -2, -1, 0, 1, 2, 3};
+int quadrant_y[] = {-3, -2, -1, 0, 1, 2, 3};
 
 // ball obj constructor;
 ball::ball() {
-    //select quadrant
-    int q = 8;
-    while (q == 8) {
+    // select quadrant to prevent starting overlap as much as possible
+    int qx = 8;
+    int qy = 8;
+    while (qx == 8) {
         int k = rand()%6;
-        q = quadrant[k];
-        quadrant[k] = 8;
+        qx = quadrant_x[k];
+        quadrant_x[k] = 8;
     }
-    
-    printf("q%d\n", q);
-    
-    x = ((float)(200.0f)*(float)q)/1000.0f;
+    while (qy == 8) {
+        int k = rand()%6;
+        qy = quadrant_y[k];
+        quadrant_y[k] = 8;
+    }
+    // select x,y
+    x = ((float)(200.0f)*(float)qx)/1000.0f;
     y = (float)(rand()%1400+1-700)/1000.0f;
-    
-    printf("xy %f, %f\n", x, y);
+    // select colour
     int i = rand()%3 + 1;
     if (i == 1) {
         r = 0.0f;
@@ -45,19 +48,11 @@ ball::ball() {
         b = 0.0f;
     }
     
-    vx = (float)(rand()%20+1-10)/1000.0f;
-    vy = (float)(rand()%20+1-10)/1000.0f;
+    vx = (float)(rand()%10+1-5)/5000.0f;
+    vy = (float)(rand()%10+1-5)/5000.0f;
     
-    w = (float)i*50.0f/1000.0f;
+    w = (float)(rand()%3 + 1)*50.0f/1000.0f;
 };
-
-// set friction and gravity to user defined values
-void set_friction(float f) {
-    FRICTION_CONSTANT_X = f;
-}
-void set_gravity(float g) {
-    GRAVITY_CONSTANT_Y = g;
-}
 
 // moves ball's position based on its velocity
 void move_ball(ball* b) {
@@ -131,9 +126,10 @@ void draw_ball(ball* b) {
     glEnd();
 }
 
+// define time between each refresh
 void timer(int value) {
     glutPostRedisplay();
-    glutTimerFunc(10, timer, 0);
+    glutTimerFunc(33, timer, 0);
 }
 
 void change_step(ball* b) {
@@ -160,21 +156,14 @@ void display()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     for (int i=0; i<nb_balls; i++) {
-        //printf("%f,%f,%f\n", balls[i]->x, balls[i]->y, balls[i]->w);
+        thread_ids[i] = thread(change_step, balls[i]);
+    }
+    for (int i=0; i<nb_balls; i++) {
         draw_ball(balls[i]);
-        //thread_ids[i] = thread(draw_ball, balls[i]);
-    }
-    for (int i=0; i<nb_balls; i++) {
-        //thread_ids[i].join();
-    }
-    for (int i=0; i<nb_balls; i++) {
-        thread_ids[i] = thread(move_ball, balls[i]);
     }
     for (int i=0; i<nb_balls; i++) {
         thread_ids[i].join();
-    }
-    for (int i=0; i<nb_balls; i++) {
-        thread_ids[i] = thread(change_step, balls[i]);
+        thread_ids[i] = thread(move_ball, balls[i]);
     }
     for (int i=0; i<nb_balls; i++) {
         thread_ids[i].join();
