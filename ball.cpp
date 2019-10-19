@@ -48,8 +48,8 @@ ball::ball() {
         b = 0.0f;
     }
     
-    vx = (float)(rand()%10+1-5)/5000.0f;
-    vy = (float)(rand()%10+1-5)/5000.0f;
+    vx = (float)(rand()%20+1-10)/5000.0f;
+    vy = (float)(rand()%20+1-10)/5000.0f;
     
     w = (float)(rand()%3 + 1)*50.0f/1000.0f;
 };
