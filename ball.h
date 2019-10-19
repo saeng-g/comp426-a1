@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <vector>
 
 // OpenGL related libraries
 #include <GL/glew.h>
@@ -36,17 +37,18 @@ float get_new_weight(void);
 ball get_new_ball(void);
 
 
-//TBB task class
+//TBB class parallel for loop : move_ball
 class for_loop_move {
-    ball* balls;
+    ball** ballsv;
 public:
-    // constructor copies the arguments into local storage
-    for_loop_move(ball*);
-    // overload () so it does a vector multiply
-    void operator() (const blocked_range<size_t> &r) const {
-        for (size_t i = r.begin(); i != r.end(); i++)
-        {
-            ball* a[
-        }
-    }
-}
+    for_loop_move(ball**);
+    void operator() (const tbb::blocked_range<size_t> &r) const;
+};
+
+//TBB class parallel for loop : change_step
+class for_loop_change {
+    ball** ballsv;
+public:
+    for_loop_change(ball**);
+    void operator() (const tbb::blocked_range<size_t> &r) const;
+};

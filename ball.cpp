@@ -12,6 +12,8 @@ ball* balls[5];
 int quadrant_x[] = {-3, -2, -1, 0, 1, 2, 3};
 int quadrant_y[] = {-3, -2, -1, 0, 1, 2, 3};
 
+
+
 // ball obj constructor;
 ball::ball() {
     // select quadrant to prevent starting overlap as much as possible
@@ -53,6 +55,40 @@ ball::ball() {
     
     w = (float)(rand()%3 + 1)*50.0f/1000.0f;
 };
+
+//TBB parallel for loop class: move_ball equivalent
+for_loop_move::for_loop_move(ball** ballsvec) { ballsv = ballsvec; };
+
+void for_loop_move::operator() (const tbb::blocked_range<size_t> &r) const {
+    for (size_t i = r.begin(); i != r.end(); i++) {
+        ball* b = ballsv[i];
+        b->x = b->x + b->vx;
+        b->y = b->y + b->vy;
+    }
+}
+
+//TBB parallel for loop class: change_step equivalent
+for_loop_change::for_loop_change(ball** ballsvec) { ballsv = ballsvec; };
+
+void for_loop_change::operator() (const tbb::blocked_range<size_t> &r) const {
+    for (size_t i = r.begin(); i != r.end(); i++) {
+        ball* b = ballsv[i];
+        char a = touch_wall(b, -1.0f, 1.0f, -1.0f, 1.0f);
+        for (int j=0; j<nb_balls; j++) {
+            if (b!=ballsv[j]) {
+                char touched = touch(b, ballsv[j]);
+                if (touched == 'n') {
+                    change_direction(b, touched);
+                }
+            }
+        }
+        if (a!='0') {
+            change_direction(b, a);
+        }
+        change_velocity(b);
+    }
+}
+
 
 // moves ball's position based on its velocity
 void move_ball(ball* b) {
@@ -109,7 +145,7 @@ char touch_wall(ball* b1, float minx, float maxx, float miny, float maxy) {
     else { return '0'; } //not touching any walls
 }
 
-//
+// drawing the ball
 void draw_ball(ball* b) {
     float x = b->x;
     float y = b->y;
@@ -147,6 +183,9 @@ void change_step(ball* b) {
     }
     change_velocity(b);
 }
+
+
+
 
 void display()
 {
