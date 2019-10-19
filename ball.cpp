@@ -189,24 +189,20 @@ void change_step(ball* b) {
 
 void display()
 {
-    thread thread_ids[nb_balls];
     glClear(GL_COLOR_BUFFER_BIT);
     glClearColor(1, 1, 1, 1);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    for (int i=0; i<nb_balls; i++) {
-        thread_ids[i] = thread(change_step, balls[i]);
-    }
+    tbb::task_scheduler_init init;
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, nb_balls),
+                      for_loop_change(balls),
+                      tbb::auto_partitioner());
     for (int i=0; i<nb_balls; i++) {
         draw_ball(balls[i]);
     }
-    for (int i=0; i<nb_balls; i++) {
-        thread_ids[i].join();
-        thread_ids[i] = thread(move_ball, balls[i]);
-    }
-    for (int i=0; i<nb_balls; i++) {
-        thread_ids[i].join();
-    }
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, nb_balls),
+                      for_loop_move(balls),
+                      tbb::auto_partitioner());
     glutSwapBuffers();
 }
 int main(int argc, char **argv)
