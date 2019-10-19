@@ -15,6 +15,7 @@ float GRAVITY_CONSTANT_Y = 0.001f; //default gravity
 class ball {
 public:
     float r, g, b, x, y, vx, vy, w;
+    ball* prev_contact;
     ball();
 };
 

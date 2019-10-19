@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		09742F8F235B894A007776C4 /* libtbb.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 09742F8C235B8949007776C4 /* libtbb.dylib */; };
+		09742F90235B894A007776C4 /* libtbbmalloc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 09742F8D235B894A007776C4 /* libtbbmalloc.dylib */; };
+		09742F91235B894A007776C4 /* libtbbmalloc_proxy.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 09742F8E235B894A007776C4 /* libtbbmalloc_proxy.dylib */; };
 		099995A7233ECDBD001E5182 /* libGLEW.2.1.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 099995A6233ECDBD001E5182 /* libGLEW.2.1.0.dylib */; };
 		099995A9233ECDD4001E5182 /* libglut.3.10.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 099995A8233ECDD4001E5182 /* libglut.3.10.0.dylib */; };
 		099995AE233ED304001E5182 /* libglfw.3.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 099995AD233ED304001E5182 /* libglfw.3.3.dylib */; };
@@ -28,6 +31,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		09742F8C235B8949007776C4 /* libtbb.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtbb.dylib; path = ../../../../../../../usr/local/Cellar/tbb/2019_U9/lib/libtbb.dylib; sourceTree = "<group>"; };
+		09742F8D235B894A007776C4 /* libtbbmalloc.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtbbmalloc.dylib; path = ../../../../../../../usr/local/Cellar/tbb/2019_U9/lib/libtbbmalloc.dylib; sourceTree = "<group>"; };
+		09742F8E235B894A007776C4 /* libtbbmalloc_proxy.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtbbmalloc_proxy.dylib; path = ../../../../../../../usr/local/Cellar/tbb/2019_U9/lib/libtbbmalloc_proxy.dylib; sourceTree = "<group>"; };
 		09999591233EC8F3001E5182 /* comp426_a1 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = comp426_a1; sourceTree = BUILT_PRODUCTS_DIR; };
 		0999959B233EC910001E5182 /* ball.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = ball.cpp; path = ../../ball.cpp; sourceTree = "<group>"; };
 		0999959C233EC910001E5182 /* ball.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; fileEncoding = 4; name = ball.h; path = ../../ball.h; sourceTree = "<group>"; };
@@ -45,6 +51,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				09742F8F235B894A007776C4 /* libtbb.dylib in Frameworks */,
+				09742F90235B894A007776C4 /* libtbbmalloc.dylib in Frameworks */,
+				09742F91235B894A007776C4 /* libtbbmalloc_proxy.dylib in Frameworks */,
 				099995B8233FAD56001E5182 /* GLKit.framework in Frameworks */,
 				099995B4233ED5C9001E5182 /* OpenGL.framework in Frameworks */,
 				099995AE233ED304001E5182 /* libglfw.3.3.dylib in Frameworks */,
@@ -85,6 +94,9 @@
 		099995A5233ECDBD001E5182 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				09742F8C235B8949007776C4 /* libtbb.dylib */,
+				09742F8E235B894A007776C4 /* libtbbmalloc_proxy.dylib */,
+				09742F8D235B894A007776C4 /* libtbbmalloc.dylib */,
 				099995B7233FAD56001E5182 /* GLKit.framework */,
 				099995B3233ED5C9001E5182 /* OpenGL.framework */,
 				099995B1233ED32B001E5182 /* readme.md */,
@@ -284,11 +296,13 @@
 					/usr/local/Cellar/freeglut/3.0.0/include,
 					/usr/local/Cellar/glfw/3.3/include,
 					/usr/local/Cellar/glm/0.9.9.5/include,
+					/usr/local/Cellar/tbb/2019_U9/include,
 				);
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/Cellar/glew/2.1.0/lib,
 					/usr/local/Cellar/freeglut/3.0.0/lib,
 					/usr/local/Cellar/glfw/3.3/lib,
+					/usr/local/Cellar/tbb/2019_U9/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -305,11 +319,13 @@
 					/usr/local/Cellar/freeglut/3.0.0/include,
 					/usr/local/Cellar/glfw/3.3/include,
 					/usr/local/Cellar/glm/0.9.9.5/include,
+					/usr/local/Cellar/tbb/2019_U9/include,
 				);
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/Cellar/glew/2.1.0/lib,
 					/usr/local/Cellar/freeglut/3.0.0/lib,
 					/usr/local/Cellar/glfw/3.3/lib,
+					/usr/local/Cellar/tbb/2019_U9/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

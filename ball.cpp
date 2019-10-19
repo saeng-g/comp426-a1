@@ -1,6 +1,10 @@
 #include "ball.h"
 #import <vector>
 #import <thread>
+#import "tbb/task_scheduler_init.h"
+#import "tbb/parallel_for.h"
+#import "tbb/blocked_range.h"
+#import "tbb/tick_count.h"
 
 using std::thread;
 
@@ -12,11 +16,15 @@ ball* balls[5];
 int quadrant_x[] = {-3, -2, -1, 0, 1, 2, 3};
 int quadrant_y[] = {-3, -2, -1, 0, 1, 2, 3};
 
+
+
+
 // ball obj constructor;
 ball::ball() {
     // select quadrant to prevent starting overlap as much as possible
     int qx = 8;
     int qy = 8;
+    ball* prev_contact = nullptr;
     while (qx == 8) {
         int k = rand()%6;
         qx = quadrant_x[k];
@@ -47,12 +55,13 @@ ball::ball() {
         g = 0.0f;
         b = 0.0f;
     }
-    
-    vx = (float)(rand()%10+1-5)/5000.0f;
-    vy = (float)(rand()%10+1-5)/5000.0f;
-    
+    vx = (float)(rand()%20+1-10)/1000.0f;
+    vy = (float)(rand()%20+1-10)/1000.0f;
     w = (float)(rand()%3 + 1)*50.0f/1000.0f;
 };
+
+
+
 
 // moves ball's position based on its velocity
 void move_ball(ball* b) {
@@ -76,6 +85,42 @@ void change_velocity(ball* b) {
     b->vy = (b->vy <= 0.001f) && (b->y - b->w <= -0.999f) ? 0 : b->vy - GRAVITY_CONSTANT_Y;
 }
 
+// return point of contact between two balls
+std::vector<float> point_of_contact(ball* b1, ball* b2) {
+    float x_delta = b1->x - b2->x;
+    float y_delta = b1->y - b2->y;
+    float x_point = (x_delta*b1->w) / (b1->w + b2->w);
+    float y_point = (y_delta*b1->w) / (b1->w + b2->w);
+    return std::vector<float>{x_point, y_point};
+}
+
+// get the normal vector
+std::vector<float> get_normal(float x_point, float y_point, ball* b) {
+    float x_normal = x_point - b->x;
+    float y_normal = y_point - b->y;
+    float length = sqrt(pow(x_normal, 2) + pow(y_normal, 2));
+    float x_unit = x_normal/length;
+    float y_unit = y_normal/length;
+    return std::vector<float>{x_unit, y_unit};
+}
+
+// set new velocity as the reflection vector
+void change_dir_as_reflection(float x_normal, float y_normal, ball* b) {
+    // r = d - 2(d.n)n
+    float dotproduct = (b->vx * x_normal) + (b->vy * y_normal);
+    //float length_d = sqrt(pow(b->vx, 2) + pow(b->vy, 2));
+    //float unit_dx = b->vx/length_d;
+    //float unit_dy = b->vy/length_d;
+    
+    //printf("%f%f", b->vx, b->vy);
+    //b->vx = length_d*(unit_dx - (2*dotproduct*x_normal));
+    //b->vy = length_d*(unit_dy - (2*dotproduct*y_normal));
+    
+    b->vx = b->vx - (2*dotproduct*x_normal);
+    b->vy = b->vy - (2*dotproduct*y_normal);
+    //printf("%f%f", b->vx, b->vy);
+}
+
 // change direction
 void change_direction(ball* b, char direction) {
     if (direction == 'l' || direction == 'r') {
@@ -96,7 +141,10 @@ char touch(ball* b1, ball* b2) {
     double x_diff = pow((double) b1->x - (double) b2->x, 2);
     double y_diff = pow((double) b1->y - (double) b2->y, 2);
     double dist = sqrt(x_diff + y_diff);
-    result = (dist - (b1->w + b2->w)) < -0.0006f ? 'y' : 'n';
+    result = dist - (b1->w + b2->w) <= 0.006f ? 'y' : 'n';
+    if (result == 'y') {
+        result = dist - (b1->w + b2->w) >= 0.00f ? 'y' : 'n';
+    }
     return result;
 }
 
@@ -109,7 +157,7 @@ char touch_wall(ball* b1, float minx, float maxx, float miny, float maxy) {
     else { return '0'; } //not touching any walls
 }
 
-//
+// draw
 void draw_ball(ball* b) {
     float x = b->x;
     float y = b->y;
@@ -135,15 +183,19 @@ void timer(int value) {
 void change_step(ball* b) {
     char a = touch_wall(b, -1.0f, 1.0f, -1.0f, 1.0f);
     for (int j=0; j<nb_balls; j++) {
-        if (b!=balls[j]) {
+        if (b!=balls[j] && b->prev_contact != balls[j]) {
             char touched = touch(b, balls[j]);
-            if (touched == 'n') {
-                change_direction(b, touched);
+            if (touched == 'y') {
+                std::vector<float> poc = point_of_contact(b, balls[j]);
+                std::vector<float> n = get_normal(poc[0], poc[1], balls[j]);
+                change_dir_as_reflection(n[0], n[1], b);
+                b->prev_contact = balls[j];
             }
         }
     }
     if (a!='0') {
         change_direction(b, a);
+        b->prev_contact = nullptr;
     }
     change_velocity(b);
 }
@@ -159,10 +211,10 @@ void display()
         thread_ids[i] = thread(change_step, balls[i]);
     }
     for (int i=0; i<nb_balls; i++) {
+        thread_ids[i].join();
         draw_ball(balls[i]);
     }
     for (int i=0; i<nb_balls; i++) {
-        thread_ids[i].join();
         thread_ids[i] = thread(move_ball, balls[i]);
     }
     for (int i=0; i<nb_balls; i++) {
