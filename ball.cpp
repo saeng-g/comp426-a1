@@ -90,11 +90,10 @@ void for_loop_change::operator() (const tbb::blocked_range<size_t> &r) const {
 }
 
 
-// moves ball's position based on its velocity
-void move_ball(ball* b) {
-    b->x = b->x + b->vx;
-    b->y = b->y + b->vy;
-}
+
+/*
+ * HELPER METHODS (ALL SEQUENTIAL AS THEY ARE SMALL ACTIONS THAT ARE DEPENDENT ON EACH OTHER.)
+ */
 
 // change velocity by the gravitational constant
 void change_velocity(ball* b) {
@@ -162,31 +161,20 @@ void draw_ball(ball* b) {
     glEnd();
 }
 
+
+/*
+ * DISPLAYING
+ */
+
+
+
 // define time between each refresh
 void timer(int value) {
     glutPostRedisplay();
     glutTimerFunc(33, timer, 0);
 }
 
-void change_step(ball* b) {
-    char a = touch_wall(b, -1.0f, 1.0f, -1.0f, 1.0f);
-    for (int j=0; j<nb_balls; j++) {
-        if (b!=balls[j]) {
-            char touched = touch(b, balls[j]);
-            if (touched == 'n') {
-                change_direction(b, touched);
-            }
-        }
-    }
-    if (a!='0') {
-        change_direction(b, a);
-    }
-    change_velocity(b);
-}
-
-
-
-
+// display method for each frame
 void display()
 {
     glClear(GL_COLOR_BUFFER_BIT);
@@ -194,12 +182,15 @@ void display()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     tbb::task_scheduler_init init;
+    //parallel step : recompute velocity
     tbb::parallel_for(tbb::blocked_range<size_t>(0, nb_balls),
                       for_loop_change(balls),
                       tbb::auto_partitioner());
+    //sequential step : draw ball (OpenGL cannot handle multithreaded GL calls)
     for (int i=0; i<nb_balls; i++) {
         draw_ball(balls[i]);
     }
+    //parallel step : recompute position
     tbb::parallel_for(tbb::blocked_range<size_t>(0, nb_balls),
                       for_loop_move(balls),
                       tbb::auto_partitioner());
